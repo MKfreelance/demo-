@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kaif & Delicious — Fresh Food, Real Taste</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --card: #1e1e1e;
+    --border: #2a2a2a;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --red: #d94f3d;
+    --text: #f0ece4;
+    --muted: #888;
+    --green: #4caf50;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(13,13,13,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between; height: 64px;
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--gold); letter-spacing: 0.02em; }
+  .logo span { color: var(--text); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-actions { display: flex; gap: 1rem; align-items: center; }
+  .wa-btn { background: #25D366; color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; text-decoration: none; transition: opacity 0.2s; }
+  .wa-btn:hover { opacity: 0.85; }
+  .cart-btn { background: var(--gold); color: #000; border: none; padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 700; cursor: pointer; position: relative; transition: background 0.2s; }
+  .cart-btn:hover { background: var(--gold-light); }
+  .cart-count { position: absolute; top: -6px; right: -6px; background: var(--red); color: #fff; font-size: 0.65rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; align-items: center; padding: 0 5%; padding-top: 64px; background: radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.08) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(217,79,61,0.06) 0%, transparent 50%), var(--bg); position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -50%; right: -10%; width: 600px; height: 600px; border: 1px solid rgba(201,168,76,0.08); border-radius: 50%; }
+  .hero::after { content: ''; position: absolute; top: -30%; right: 5%; width: 400px; height: 400px; border: 1px solid rgba(201,168,76,0.05); border-radius: 50%; }
+  .hero-content { max-width: 600px; z-index: 1; }
+  .hero-eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+  .hero-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--gold); }
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 900; line-height: 1.05; margin-bottom: 1.5rem; }
+  h1 em { font-style: italic; color: var(--gold); }
+  .hero-sub { color: var(--muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 2.5rem; max-width: 460px; }
+  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary { background: var(--gold); color: #000; border: none; padding: 0.9rem 2rem; border-radius: 50px; font-size: 0.9rem; font-weight: 700; cursor: pointer; letter-spacing: 0.03em; transition: all 0.2s; }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); padding: 0.9rem 2rem; border-radius: 50px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* SECTIONS */
+  section { padding: 5rem 5%; }
+  .section-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 700; margin-bottom: 1rem; }
+  .section-sub { color: var(--muted); font-size: 0.95rem; line-height: 1.7; max-width: 520px; margin-bottom: 3rem; }
+
+  /* ABOUT */
+  #about { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+  .stat-number { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--gold); }
+  .stat-label { color: var(--muted); font-size: 0.8rem; margin-top: 0.25rem; }
+  .about-visual { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 3rem; text-align: center; position: relative; overflow: hidden; }
+  .about-visual::before { content: '🍽️'; font-size: 8rem; opacity: 0.15; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .about-visual-inner { position: relative; z-index: 1; }
+  .about-visual h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--gold); margin-bottom: 1rem; }
+  .about-visual p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+
+  /* MENU */
+  .menu-categories { display: flex; gap: 0.75rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+  .cat-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 0.5rem 1.25rem; border-radius: 50px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .cat-btn.active, .cat-btn:hover { background: var(--gold); color: #000; border-color: var(--gold); }
+  .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+  .menu-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: transform 0.2s, border-color 0.2s; }
+  .menu-card:hover { transform: translateY(-4px); border-color: rgba(201,168,76,0.3); }
+  .menu-img { width: 100%; height: 160px; background: linear-gradient(135deg, #1a1a1a, #252525); display: flex; align-items: center; justify-content: center; font-size: 3.5rem; }
+  .menu-info { padding: 1.25rem; }
+  .menu-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .menu-desc { color: var(--muted); font-size: 0.8rem; line-height: 1.5; margin-bottom: 1rem; }
+  .menu-footer { display: flex; align-items: center; justify-content: space-between; }
+  .menu-price { font-size: 1.1rem; font-weight: 700; color: var(--gold); }
+  .add-btn { background: var(--gold); color: #000; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .add-btn:hover { background: var(--gold-light); }
+  .add-btn.added { background: var(--green); color: #fff; }
+
+  /* CART MODAL */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(4px); }
+  .overlay.active { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto; padding: 2rem; }
+  .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; }
+  .close-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+
+  /* FORM */
+  .form-group { margin-bottom: 1.25rem; }
+  .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+  .form-input { width: 100%; background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.9rem; font-family: 'Inter', sans-serif; transition: border-color 0.2s; outline: none; }
+  .form-input:focus { border-color: var(--gold); }
+  textarea.form-input { resize: vertical; min-height: 80px; }
+  .cart-items { margin-bottom: 1.5rem; }
+  .cart-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border); font-size: 0.875rem; }
+  .cart-item-name { font-weight: 500; }
+  .cart-item-price { color: var(--gold); font-weight: 600; }
+  .cart-item-qty { display: flex; align-items: center; gap: 0.5rem; }
+  .qty-btn { background: var(--border); border: none; color: var(--text); width: 24px; height: 24px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; }
+  .cart-total { display: flex; justify-content: space-between; padding: 1rem 0; font-weight: 700; font-size: 1rem; border-top: 1px solid var(--border); margin-bottom: 1rem; }
+  .total-amount { color: var(--gold); font-size: 1.2rem; }
+  .submit-order-btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 1rem; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; letter-spacing: 0.03em; }
+  .submit-order-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .submit-order-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* SUCCESS */
+  .success-screen { text-align: center; padding: 2rem 0; }
+  .success-icon { font-size: 4rem; margin-bottom: 1rem; }
+  .success-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 0.75rem; color: var(--green); }
+  .success-msg { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+  /* SUPPORT */
+  #support { background: var(--surface); border-top: 1px solid var(--border); }
+  .support-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+  .support-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; text-align: center; transition: border-color 0.2s; }
+  .support-card:hover { border-color: rgba(201,168,76,0.3); }
+  .support-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .support-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .support-card p { color: var(--muted); font-size: 0.82rem; line-height: 1.6; margin-bottom: 1.25rem; }
+  .support-link { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; text-decoration: none; padding: 0.5rem 1.25rem; border-radius: 50px; transition: all 0.2s; }
+  .support-link.wa { background: #25D366; color: #fff; }
+  .support-link.email { background: var(--gold); color: #000; }
+  .support-link.phone { background: var(--red); color: #fff; }
+  .support-link:hover { opacity: 0.85; }
+
+  /* FOOTER */
+  footer { background: #000; border-top: 1px solid var(--border); padding: 2.5rem 5%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--gold); }
+  .footer-text { color: var(--muted); font-size: 0.8rem; }
+  .divider { width: 48px; height: 2px; background: var(--gold); margin: 1rem 0 1.5rem; }
+
+  /* EMPTY CART */
+  .empty-cart { text-align: center; padding: 2rem; color: var(--muted); }
+  .empty-cart-icon { font-size: 3rem; margin-bottom: 0.75rem; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--card); border: 1px solid var(--gold); color: var(--text); padding: 0.75rem 1.5rem; border-radius: 50px; font-size: 0.85rem; font-weight: 500; z-index: 999; transition: transform 0.3s ease; white-space: nowrap; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  html { scroll-behavior: smooth; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .about-grid { grid-template-columns: 1fr; }
+    .about-visual { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Kaif <span>&</span> Delicious</div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#support">Support</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="https://wa.me/919634950165?text=Hi!%20I%20need%20help%20with%20my%20order." class="wa-btn" target="_blank">
+      💬 WhatsApp
+    </a>
+    <button class="cart-btn" onclick="openCart()">
+      🛒 Cart
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Now Accepting Orders Online</div>
+    <h1>Real Food,<br><em>Real Taste.</em></h1>
+    <p class="hero-sub">Fresh ingredients, handcrafted recipes, delivered warm to your door. Every dish made with care — because you deserve nothing less.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="document.getElementById('menu').scrollIntoView()">Order Now</button>
+      <button class="btn-outline" onclick="document.getElementById('about').scrollIntoView()">Our Story</button>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div>
+      <div class="section-label">Who We Are</div>
+      <h2 class="section-title">Kaif & Delicious</h2>
+      <div class="divider"></div>
+      <p style="color: var(--muted); line-height: 1.8; font-size: 0.95rem;">
+        Born from a love of authentic flavors, Kaif & Delicious brings together the richness of home-style cooking with the ease of online ordering. Every dish on our menu tells a story — of tradition, freshness, and passion for food.
+      </p>
+      <p style="color: var(--muted); line-height: 1.8; font-size: 0.95rem; margin-top: 1rem;">
+        We source local, cook fresh, and deliver fast. No compromises, no shortcuts — just real food made the right way.
+      </p>
+      <div class="about-stats">
+        <div class="stat-card"><div class="stat-number">500+</div><div class="stat-label">Happy Customers</div></div>
+        <div class="stat-card"><div class="stat-number">30+</div><div class="stat-label">Menu Items</div></div>
+        <div class="stat-card"><div class="stat-number">4.8★</div><div class="stat-label">Average Rating</div></div>
+        <div class="stat-card"><div class="stat-number">30 Min</div><div class="stat-label">Avg. Delivery</div></div>
+      </div>
+    </div>
+    <div class="about-visual">
+      <div class="about-visual-inner">
+        <h3>Kaif & Delicious</h3>
+        <p>Serving happiness since day one. Our kitchen is your kitchen — made with love, served with pride.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="section-label">What We Serve</div>
+  <h2 class="section-title">Our Menu</h2>
+  <p class="section-sub">Fresh, flavorful, and made to order. Pick your favorites and we'll have them ready for you.</p>
+  <div class="menu-categories">
+    <button class="cat-btn active" onclick="filterMenu('all', this)">All</button>
+    <button class="cat-btn" onclick="filterMenu('starters', this)">Starters</button>
+    <button class="cat-btn" onclick="filterMenu('main', this)">Main Course</button>
+    <button class="cat-btn" onclick="filterMenu('rice', this)">Rice & Biryani</button>
+    <button class="cat-btn" onclick="filterMenu('drinks', this)">Drinks</button>
+  </div>
+  <div class="menu-grid" id="menuGrid"></div>
+</section>
+
+<!-- SUPPORT -->
+<section id="support">
+  <div class="section-label">We're Here For You</div>
+  <h2 class="section-title">Customer Care</h2>
+  <p class="section-sub">Any issue with your order? Reach out — we respond fast.</p>
+  <div class="support-grid">
+    <div class="support-card">
+      <div class="support-icon">💬</div>
+      <h3>WhatsApp Support</h3>
+      <p>Fastest way to reach us. Chat directly with our team for order help, changes, or feedback.</p>
+      <a href="https://wa.me/919634950165?text=Hi!%20I%20need%20help%20with%20my%20order." class="support-link wa" target="_blank">Chat Now</a>
+    </div>
+    <div class="support-card">
+      <div class="support-icon">📧</div>
+      <h3>Email Us</h3>
+      <p>For detailed queries, complaints, or feedback. We reply within a few hours.</p>
+      <a href="mailto:kaifsiddiqui28637@gmail.com" class="support-link email">Send Email</a>
+    </div>
+    <div class="support-card">
+      <div class="support-icon">📞</div>
+      <h3>Call Us</h3>
+      <p>Need to talk? Our team is available during business hours — 10 AM to 10 PM.</p>
+      <a href="tel:+919634950165" class="support-link phone">Call Now</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Kaif & Delicious</div>
+  <div class="footer-text">© 2025 Kaif & Delicious. All rights reserved.</div>
+  <div class="footer-text">📍 Nanauta, Saharanpur, UP</div>
+</footer>
+
+<!-- CART MODAL -->
+<div class="overlay" id="cartOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Your Order</div>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
+    <div id="cartContent"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── MENU DATA ──
+  const menuItems = [
+    { id: 1,  name: 'Chicken Tikka',        category: 'starters', price: 180, emoji: '🍗', desc: 'Tender chicken marinated in spices, grilled to perfection' },
+    { id: 2,  name: 'Paneer Pakora',         category: 'starters', price: 120, emoji: '🧀', desc: 'Crispy cottage cheese fritters with mint chutney' },
+    { id: 3,  name: 'Veg Spring Roll',       category: 'starters', price: 100, emoji: '🌮', desc: 'Crispy rolls stuffed with fresh veggies and spices' },
+    { id: 4,  name: 'Butter Chicken',        category: 'main',     price: 280, emoji: '🍛', desc: 'Classic creamy tomato gravy with tender chicken' },
+    { id: 5,  name: 'Dal Makhani',           category: 'main',     price: 200, emoji: '🫘', desc: 'Slow-cooked black lentils in rich buttery gravy' },
+    { id: 6,  name: 'Paneer Butter Masala',  category: 'main',     price: 220, emoji: '🍲', desc: 'Soft paneer in rich cashew-tomato gravy' },
+    { id: 7,  name: 'Chicken Biryani',       category: 'rice',     price: 320, emoji: '🍚', desc: 'Fragrant basmati rice with spiced chicken, slow cooked' },
+    { id: 8,  name: 'Veg Biryani',           category: 'rice',     price: 220, emoji: '🌾', desc: 'Aromatic rice with fresh vegetables and whole spices' },
+    { id: 9,  name: 'Jeera Rice',            category: 'rice',     price: 120, emoji: '🍙', desc: 'Fluffy basmati rice tempered with cumin' },
+    { id: 10, name: 'Mango Lassi',           category: 'drinks',   price: 80,  emoji: '🥭', desc: 'Chilled yogurt drink blended with Alphonso mango' },
+    { id: 11, name: 'Masala Chai',           category: 'drinks',   price: 40,  emoji: '☕', desc: 'Spiced Indian tea brewed the traditional way' },
+    { id: 12, name: 'Cold Coffee',           category: 'drinks',   price: 90,  emoji: '🧋', desc: 'Creamy cold coffee with a hint of cardamom' },
+  ];
+
+  let cart = {};
+  let currentFilter = 'all';
+
+  // ── NOTIFICATION PERMISSION ──
+  function requestNotifPermission() {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }
+  requestNotifPermission();
+
+  // ── SOUND: Order Confirmation Beep (for customer) ──
+  function playOrderSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const notes = [523, 659, 784, 1047]; // C-E-G-C chord
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.12);
+        gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + i * 0.12 + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.12 + 0.4);
+        osc.start(ctx.currentTime + i * 0.12);
+        osc.stop(ctx.currentTime + i * 0.12 + 0.5);
+      });
+    } catch(e) {}
+  }
+
+  // ── PUSH NOTIFICATION (browser) ──
+  function sendBrowserNotification(orderId, name) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('✅ Order Placed — Kaif & Delicious', {
+        body: `Order #${orderId} confirmed for ${name}! We'll prepare it right away.`,
+        icon: 'https://emojicdn.elk.sh/🍛'
+      });
+    }
+  }
+
+  // ── SAVE ORDER TO localStorage (so Admin panel picks it up) ──
+  function saveOrderToStorage(order) {
+    try {
+      const existing = JSON.parse(localStorage.getItem('kd_orders') || '[]');
+      existing.unshift(order);
+      localStorage.setItem('kd_orders', JSON.stringify(existing));
+    } catch(e) {}
+  }
+
+  // ── RENDER MENU ──
+  function renderMenu(filter = 'all') {
+    const grid = document.getElementById('menuGrid');
+    const items = filter === 'all' ? menuItems : menuItems.filter(i => i.category === filter);
+    grid.innerHTML = items.map(item => `
+      <div class="menu-card">
+        <div class="menu-img">${item.emoji}</div>
+        <div class="menu-info">
+          <div class="menu-name">${item.name}</div>
+          <div class="menu-desc">${item.desc}</div>
+          <div class="menu-footer">
+            <div class="menu-price">₹${item.price}</div>
+            <button class="add-btn ${cart[item.id] ? 'added' : ''}" id="btn-${item.id}" onclick="addToCart(${item.id})">
+              ${cart[item.id] ? `✓ ${cart[item.id].qty}` : '+ Add'}
+            </button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterMenu(cat, btn) {
+    currentFilter = cat;
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderMenu(cat);
+  }
+
+  // ── ADD TO CART → automatically opens cart ──
+  function addToCart(id) {
+    const item = menuItems.find(i => i.id === id);
+    if (cart[id]) {
+      cart[id].qty++;
+    } else {
+      cart[id] = { ...item, qty: 1 };
+    }
+    updateCartCount();
+    renderMenu(currentFilter);
+    openCart(); // ← Auto-open cart when item added
+    showToast(`🛒 ${item.emoji} ${item.name} added!`);
+  }
+
+  function updateCartCount() {
+    const total = Object.values(cart).reduce((s, i) => s + i.qty, 0);
+    document.getElementById('cartCount').textContent = total;
+  }
+
+  function openCart() {
+    document.getElementById('cartOverlay').classList.add('active');
+    renderCartContent();
+  }
+
+  function closeCart() {
+    document.getElementById('cartOverlay').classList.remove('active');
+  }
+
+  function renderCartContent() {
+    const content = document.getElementById('cartContent');
+    const items = Object.values(cart);
+
+    if (items.length === 0) {
+      content.innerHTML = `
+        <div class="empty-cart">
+          <div class="empty-cart-icon">🛒</div>
+          <p>Your cart is empty</p>
+          <p style="font-size:0.8rem;margin-top:0.5rem">Add items from the menu to get started</p>
+        </div>`;
+      return;
+    }
+
+    const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+
+    // ── Cart items + pre-filled form ──
+    content.innerHTML = `
+      <div class="cart-items">
+        ${items.map(i => `
+          <div class="cart-item">
+            <div>
+              <div class="cart-item-name">${i.emoji} ${i.name}</div>
+              <div style="color:var(--muted);font-size:0.78rem">₹${i.price} each</div>
+            </div>
+            <div class="cart-item-qty">
+              <button class="qty-btn" onclick="changeQty(${i.id}, -1)">−</button>
+              <span>${i.qty}</span>
+              <button class="qty-btn" onclick="changeQty(${i.id}, 1)">+</button>
+            </div>
+            <div class="cart-item-price">₹${i.price * i.qty}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="cart-total">
+        <span>Total Amount</span>
+        <span class="total-amount">₹${total}</span>
+      </div>
+
+      <div style="margin-bottom:1.5rem;padding:1rem;background:var(--card);border-radius:12px;border:1px solid var(--border);">
+        <div style="font-size:0.8rem;color:var(--gold);font-weight:600;margin-bottom:1rem;text-transform:uppercase;letter-spacing:0.08em;">Delivery Details</div>
+
+        <!-- Order summary pre-filled as read-only listing -->
+        <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:8px;padding:0.75rem;margin-bottom:1rem;">
+          <div style="font-size:0.72rem;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;">🧾 Your Order Summary</div>
+          ${items.map(i => `
+            <div style="font-size:0.8rem;display:flex;justify-content:space-between;padding:0.2rem 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+              <span>${i.emoji} ${i.name} × ${i.qty}</span>
+              <span style="color:var(--gold)">₹${i.price * i.qty}</span>
+            </div>
+          `).join('')}
+          <div style="font-size:0.85rem;font-weight:700;display:flex;justify-content:space-between;margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid rgba(201,168,76,0.2);">
+            <span>Total</span><span style="color:var(--gold)">₹${total}</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-input" id="custName" placeholder="Enter your name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number *</label>
+          <input type="tel" class="form-input" id="custPhone" placeholder="+91 XXXXX XXXXX">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address *</label>
+          <input type="email" class="form-input" id="custEmail" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Delivery Address *</label>
+          <textarea class="form-input" id="custAddress" placeholder="House no., Street, Area, City, PIN"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Special Instructions</label>
+          <textarea class="form-input" id="custNotes" placeholder="Less spicy, extra sauce, etc." style="min-height:60px"></textarea>
+        </div>
+      </div>
+
+      <button class="submit-order-btn" id="placeOrderBtn" onclick="placeOrder()">
+        Place Order — ₹${total}
+      </button>
+    `;
+  }
+
+  function changeQty(id, delta) {
+    if (!cart[id]) return;
+    cart[id].qty += delta;
+    if (cart[id].qty <= 0) delete cart[id];
+    updateCartCount();
+    renderMenu(currentFilter);
+    renderCartContent();
+  }
+
+  async function placeOrder() {
+    const name    = document.getElementById('custName').value.trim();
+    const phone   = document.getElementById('custPhone').value.trim();
+    const email   = document.getElementById('custEmail').value.trim();
+    const address = document.getElementById('custAddress').value.trim();
+    const notes   = document.getElementById('custNotes').value.trim();
+
+    if (!name || !phone || !email || !address) {
+      showToast('⚠️ Please fill all required fields');
+      return;
+    }
+
+    const items    = Object.values(cart);
+    const total    = items.reduce((s, i) => s + i.price * i.qty, 0);
+    const orderId  = 'KD' + Date.now().toString().slice(-6);
+    const orderList= items.map(i => `${i.qty}x ${i.name} (₹${i.price * i.qty})`).join('\n');
+
+    const btn = document.getElementById('placeOrderBtn');
+    btn.disabled = true;
+    btn.textContent = 'Placing order...';
+
+    // ── Build order object ──
+    const order = {
+      id: orderId,
+      customerName: name,
+      customerPhone: phone,
+      customerEmail: email,
+      address: address,
+      notes: notes || '',
+      items: items.map(i => ({ name: i.name, qty: i.qty, price: i.price * i.qty, emoji: i.emoji })),
+      total: total,
+      time: new Date().toISOString(),
+      status: 'new'
+    };
+
+    // ── Save to localStorage (Admin will read this) ──
+    saveOrderToStorage(order);
+
+    // ── Play order confirmation sound ──
+    playOrderSound();
+
+    // ── Browser push notification ──
+    sendBrowserNotification(orderId, name);
+
+    // ── EmailJS (configure your IDs here) ──
+    try {
+      await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+        to_name: 'Kaif & Delicious',
+        to_email: 'kaifsiddiqui28637@gmail.com',
+        order_id: orderId,
+        customer_name: name,
+        customer_phone: phone,
+        customer_email: email,
+        customer_address: address,
+        order_items: orderList,
+        order_total: '₹' + total,
+        special_notes: notes || 'None',
+      });
+      await emailjs.send('YOUR_SERVICE_ID', 'YOUR_CUSTOMER_TEMPLATE_ID', {
+        to_name: name,
+        to_email: email,
+        order_id: orderId,
+        order_items: orderList,
+        order_total: '₹' + total,
+        restaurant_phone: '+91 9634950165',
+        restaurant_wa: 'https://wa.me/919634950165',
+      });
+    } catch(e) {
+      // EmailJS not configured yet — demo still works fine
+      console.log('EmailJS (optional):', e.message);
+    }
+
+    // ── Show success ──
+    document.getElementById('cartContent').innerHTML = `
+      <div class="success-screen">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Order Placed!</div>
+        <p class="success-msg">
+          <strong>Order ID: ${orderId}</strong><br><br>
+          Thank you ${name}! Your order is confirmed.<br>
+          We will prepare it right away.<br><br>
+          Questions? <a href="https://wa.me/919634950165" target="_blank" style="color:var(--gold)">WhatsApp us</a>
+        </p>
+      </div>
+    `;
+
+    cart = {};
+    updateCartCount();
+    renderMenu(currentFilter);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  document.getElementById('cartOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeCart();
+  });
+
+  // Init
+  renderMenu();
+</script>
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  emailjs.init('YOUR_PUBLIC_KEY'); // Replace with your EmailJS public key
+</script>
+
+</body>
+</html>
